@@ -7,8 +7,14 @@ provider:
   runtime: python3.9
 
 functions:
-  hello:
-    handler: handler.hello
+  IoTHandler:
+    handler: handler.iot_handler
+    events:
+      - iot:
+          sql: "SELECT *, clientid() AS client_id FROM 'iot'"
+          name: iot_project
+          description: "iot-project"
+          enabled: true
 
 plugins:
   - serverless-python-requirements

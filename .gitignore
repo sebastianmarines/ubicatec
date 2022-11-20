@@ -7,7 +7,7 @@ dist/
 downloads/
 eggs/
 .eggs/
-lib/
+data/
 lib64/
 parts/
 sdist/
@@ -15,6 +15,7 @@ var/
 *.egg-info/
 .installed.cfg
 *.egg
+__pycache__/
 
 # Serverless directories
 .serverless

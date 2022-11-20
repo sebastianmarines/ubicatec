@@ -1,10 +1,10 @@
-import json
+from models import IoTData
 
 
-def hello(event, context):
-    body = {
-        "message": "Go Serverless v3.0! Your function executed successfully!",
-        "input": event,
-    }
+def iot_handler(event: dict, context):
+    data = adapter(event)
+    return data.json()
 
-    return {"statusCode": 200, "body": json.dumps(body)}
+
+def adapter(event) -> IoTData:
+    return IoTData(**event)
