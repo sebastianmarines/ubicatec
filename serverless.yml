@@ -6,9 +6,119 @@ provider:
   name: aws
   runtime: python3.9
 
+resources:
+  Resources:
+    RDSMasterCredentials:
+      Type: 'AWS::SecretsManager::Secret'
+      Properties:
+        Description: AWS RDS admin credentials
+        GenerateSecretString:
+          SecretStringTemplate: '{"username": "admin"}'
+          GenerateStringKey: password
+          PasswordLength: 32
+          ExcludeCharacters: '"@/\'
+    VPC:
+        Type: AWS::EC2::VPC
+        Properties:
+            CidrBlock: 10.0.0.0/16
+            EnableDnsSupport: true
+            EnableDnsHostnames: true
+    RDSSG:
+        Type: AWS::EC2::SecurityGroup
+        Properties:
+            GroupDescription: "RDS Security Group"
+            VpcId: !Ref VPC
+            SecurityGroupIngress:
+                - IpProtocol: tcp
+                  FromPort: 3306
+                  ToPort: 3306
+                  CidrIp: 0.0.0.0/0
+    IGW:
+        Type: AWS::EC2::InternetGateway
+    VPCGatewayAttachment:
+        Type: AWS::EC2::VPCGatewayAttachment
+        Properties:
+            VpcId: !Ref VPC
+            InternetGatewayId: !Ref IGW
+    Subnet1:
+        Type: AWS::EC2::Subnet
+        Properties:
+            VpcId: !Ref VPC
+            CidrBlock: 10.0.0.0/25
+            AvailabilityZone: us-east-1a
+            MapPublicIpOnLaunch: true
+    Subnet2:
+        Type: AWS::EC2::Subnet
+        Properties:
+            VpcId: !Ref VPC
+            CidrBlock: 10.0.0.128/25
+            AvailabilityZone: us-east-1b
+            MapPublicIpOnLaunch: true
+    RouteTableSubnet1:
+        Type: AWS::EC2::RouteTable
+        Properties:
+            VpcId: !Ref VPC
+    RouteSubnet1:
+        Type: AWS::EC2::Route
+        DependsOn: VPCGatewayAttachment
+        Properties:
+            DestinationCidrBlock: "0.0.0.0/0"
+            GatewayId: !Ref IGW
+            RouteTableId: !Ref RouteTableSubnet1
+    RouteTableSubnet2:
+        Type: AWS::EC2::RouteTable
+        Properties:
+            VpcId: !Ref VPC
+    RouteSubnet2:
+        Type: AWS::EC2::Route
+        DependsOn: VPCGatewayAttachment
+        Properties:
+            DestinationCidrBlock: "0.0.0.0/0"
+            GatewayId: !Ref IGW
+            RouteTableId: !Ref RouteTableSubnet2
+    SubnetRouteTableAssociation1:
+        Type: AWS::EC2::SubnetRouteTableAssociation
+        Properties:
+            SubnetId: !Ref Subnet1
+            RouteTableId: !Ref RouteTableSubnet1
+    SubnetRouteTableAssociation2:
+        Type: AWS::EC2::SubnetRouteTableAssociation
+        Properties:
+            SubnetId: !Ref Subnet2
+            RouteTableId: !Ref RouteTableSubnet2
+    DBSubnetGroup:
+      Type: AWS::RDS::DBSubnetGroup
+      Properties:
+        DBSubnetGroupDescription: "Subnet group for RDS"
+        SubnetIds:
+          - !Ref Subnet1
+          - !Ref Subnet2
+    RDSInstance:
+      Type: AWS::RDS::DBInstance
+      Properties:
+        DBInstanceClass: db.t2.micro
+        Engine: MySQL
+        MasterUsername: !Sub '{{resolve:secretsmanager:${RDSMasterCredentials}::username}}'
+        MasterUserPassword: !Sub '{{resolve:secretsmanager:${RDSMasterCredentials}::password}}'
+        AllocatedStorage: "20"
+        DBName: iot
+        PubliclyAccessible: true
+        VPCSecurityGroups:
+          - !Ref RDSSG
+        DBSubnetGroupName:
+            Ref: DBSubnetGroup
+    SecretRDSInstanceAttachment:
+      Type: 'AWS::SecretsManager::SecretTargetAttachment'
+      Properties:
+        SecretId: !Ref RDSMasterCredentials
+        TargetId: !Ref RDSInstance
+        TargetType: 'AWS::RDS::DBInstance'
+
 functions:
   IoTHandler:
     handler: handler.iot_handler
+    environment:
+      DB_SECRETS_ARN: !Ref RDSMasterCredentials
     events:
       - iot:
           sql: "SELECT *, clientid() AS client_id FROM 'iot'"
@@ -21,4 +131,4 @@ plugins:
 
 custom:
   pythonRequirements:
-    usePoetry: false
+    usePoetry: true
