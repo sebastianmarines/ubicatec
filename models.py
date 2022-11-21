@@ -1,22 +1,23 @@
-from dataclasses import dataclass
-
-from pydantic import BaseModel, Field
-from typing import List, Union
-
-
-class IoTData(BaseModel):
-    data: Union[List[str], str]
-    client_id: str = Field(alias="clientid")
+import datetime
+from typing import Optional, List
+from sqlmodel import SQLModel, Field
+from pydantic import BaseModel
 
 
-@dataclass
-class Config:
-    db_user: str
-    db_password: str
-    db_name: str
-    db_host: str
-    db_port: str
+class Device(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    mac_address: str
+    timestamp: datetime.datetime = Field(default_factory=datetime.datetime.now, nullable=False, index=True)
+    sensor_id: str = Field(index=True)
 
-    def get_url_string(self):
-        return f"postgresql://{self.db_user}:{self.db_password}@{self.db_host}:{self.db_port}/{self.db_name}"
+
+class DBConfig(BaseModel):
+    username: str
+    password: str
+    dbname: str
+    host: str
+    port: str
+
+    def get_connection_string(self):
+        return f"mysql://{self.username}:{self.password}@{self.host}:{self.port}/{self.dbname}"
 
