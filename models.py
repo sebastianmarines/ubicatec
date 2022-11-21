@@ -7,7 +7,7 @@ from pydantic import BaseModel
 class Device(SQLModel, table=True):
     __tablename__ = "devices"
     id: Optional[int] = Field(default=None, primary_key=True)
-    mac_address: str
+    mac_address: str = Field(default=None, index=True)
     timestamp: datetime.datetime = Field(default_factory=datetime.datetime.now, nullable=False, index=True)
     sensor_id: str = Field(index=True)
 
