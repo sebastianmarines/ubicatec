@@ -5,6 +5,13 @@ frameworkVersion: '3'
 provider:
   name: aws
   runtime: python3.9
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - secretsmanager:GetSecretValue
+          Resource: !Ref RDSMasterCredentials
 
 resources:
   Resources:
