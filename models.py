@@ -12,6 +12,14 @@ class Device(SQLModel, table=True):
     sensor_id: str = Field(index=True)
 
 
+class Temperature(SQLModel, table=True):
+    __tablename__ = "temperatures"
+    id: Optional[int] = Field(default=None, primary_key=True)
+    temperature: float = Field(default=None)
+    timestamp: datetime.datetime = Field(default_factory=datetime.datetime.now, nullable=False, index=True)
+    sensor_id: str = Field(index=True)
+
+
 class DBConfig(BaseModel):
     username: str
     password: str
