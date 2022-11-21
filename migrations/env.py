@@ -18,7 +18,7 @@ env = os.environ.get("ALEMBIC_ENV", "dev")
 config = context.config
 config.set_main_option("sqlalchemy.url", get_secret(
     "arn:aws:secretsmanager:us-east-1:780690093991:secret:RDSMasterCredentials-N5pBl5ozFz5g-hlA9F6",
-    "dev").get_connection_string())
+    "dev" if env == "dev" else "iot").get_connection_string())
 
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.
