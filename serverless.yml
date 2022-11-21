@@ -128,7 +128,8 @@ functions:
       DB_SECRETS_ARN: !Ref RDSMasterCredentials
     events:
       - iot:
-          sql: "SELECT *, clientid() AS client_id FROM 'iot'"
+          sql: "SELECT * as data, clientid() AS client_id FROM 'iot'"
+          sqlVersion: "2016-03-23"
           name: iot_project
           description: "iot-project"
           enabled: true

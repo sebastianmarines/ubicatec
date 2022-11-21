@@ -20,5 +20,5 @@ class DBConfig(BaseModel):
     port: str
 
     def get_connection_string(self):
-        return f"mysql://{self.username}:{self.password}@{self.host}:{self.port}/{self.dbname}"
+        return f"mysql+pymysql://{self.username}:{self.password}@{self.host}:{self.port}/{self.dbname}"
 
