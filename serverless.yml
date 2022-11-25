@@ -12,6 +12,8 @@ provider:
           Action:
             - secretsmanager:GetSecretValue
           Resource: !Ref RDSMasterCredentials
+  environment:
+    DB_SECRETS_ARN: !Ref RDSMasterCredentials
 
 resources:
   Resources:
@@ -124,8 +126,6 @@ resources:
 functions:
   IoTHandler:
     handler: handler.iot_handler
-    environment:
-      DB_SECRETS_ARN: !Ref RDSMasterCredentials
     events:
       - iot:
           sql: "SELECT * as data, clientid() AS client_id FROM 'iot'"
@@ -133,9 +133,21 @@ functions:
           name: iot_project
           description: "iot-project"
           enabled: true
+  WebAppHandler:
+    handler: handler.web_app_handler
+    events:
+      - http:
+          path: /
+          method: get
+          cors: true
+      - http:
+          path: /{proxy+}
+          method: get
+          cors: true
 
 plugins:
   - serverless-python-requirements
+  - serverless-offline
 
 custom:
   pythonRequirements:

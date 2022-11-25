@@ -23,6 +23,12 @@ class Temperature(SQLModel, table=True):
     sensor_id: Optional[str] = Field(default=None, index=True, foreign_key="sensor.id")
 
 
+class Location(BaseModel):
+    lat: float
+    lon: float
+    occupancy: int
+
+
 class DBConfig(BaseModel):
     username: str
     password: str

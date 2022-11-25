@@ -1,8 +1,10 @@
 import os
 from utils import get_secret
 
-from models import Device, Sensor
+from models import Device, Sensor, Location
 from sqlmodel import Session, create_engine
+
+from jinja2 import Environment, FileSystemLoader
 
 ENV = os.environ.get("AWS_EXECUTION_ENV", "dev")
 DB_SECRETS_ARN = os.environ.get("DB_SECRETS_ARN")
@@ -13,7 +15,6 @@ engine = create_engine(db_url, echo=ENV == "dev")
 
 
 def iot_handler(event: dict, _context):
-
     sensor_id = event.get("client_id")
     with Session(engine) as session:
         sensor = session.query(Sensor).filter(Sensor.id == sensor_id).first()
@@ -34,3 +35,19 @@ def iot_handler(event: dict, _context):
         session.commit()
 
     return "ok"
+
+
+def web_app_handler(event: dict, _context):
+    locations = [Location(lat=25.64941614243979, lon=-100.28944203445873, occupancy=1000),
+         Location(lat=25.651384675654, lon=-100.28909563433821, occupancy=800)]
+
+    env = Environment(loader=FileSystemLoader("templates"))
+    template = env.get_template("index.html.jinja2")
+    html = template.render(locations=locations)
+    return {
+        "statusCode": 200,
+        "headers": {
+            "Content-Type": "text/html"
+        },
+        "body": html
+    }
