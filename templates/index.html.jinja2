@@ -25,9 +25,9 @@
 <nav class="navbar navbar-light bg-light">
     <div class="container-fluid">
         <a class="navbar-brand" href="#">
-            <img src="/docs/5.0/assets/brand/bootstrap-logo.svg" alt="" width="30" height="24"
+            <img src="https://gist.githubusercontent.com/sebastianmarines/73340d2b97748e145b32d84179ee89fa/raw/0c4ef87a724a3f46d693b2548e2f3a5b2da41a43/UBICATECgde2.svg"
+                 height="35rem"
                  class="d-inline-block align-text-top">
-            Bootstrap
         </a>
     </div>
 </nav>
@@ -37,11 +37,11 @@
 <script>
     let locations = [
         {% for location in locations %}
-        {
-            'lat': '{{ location.lat | string | safe }}',
-            'lng': '{{ location.lon | string | safe }}',
-            'occupancy': {{ location.occupancy }},
-        },
+            {
+                'lat': '{{ location.lat | string | safe }}',
+                'lng': '{{ location.lon | string | safe }}',
+                'occupancy': {{ location.occupancy }},
+            },
         {% endfor %}
     ]
 
