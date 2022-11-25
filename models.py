@@ -1,23 +1,26 @@
 import datetime
 from typing import Optional, List
-from sqlmodel import SQLModel, Field
+from sqlmodel import SQLModel, Field, Relationship
 from pydantic import BaseModel
 
 
+class Sensor(SQLModel, table=True):
+    id: str = Field(default=None, primary_key=True)
+    created_at: datetime.datetime = Field(default_factory=datetime.datetime.now)
+
+
 class Device(SQLModel, table=True):
-    __tablename__ = "devices"
     id: Optional[int] = Field(default=None, primary_key=True)
     mac_address: str = Field(default=None, index=True)
     timestamp: datetime.datetime = Field(default_factory=datetime.datetime.now, nullable=False, index=True)
-    sensor_id: str = Field(index=True)
+    sensor_id: Optional[str] = Field(default=None, index=True, foreign_key="sensor.id")
 
 
 class Temperature(SQLModel, table=True):
-    __tablename__ = "temperatures"
     id: Optional[int] = Field(default=None, primary_key=True)
     temperature: float = Field(default=None)
     timestamp: datetime.datetime = Field(default_factory=datetime.datetime.now, nullable=False, index=True)
-    sensor_id: str = Field(index=True)
+    sensor_id: Optional[str] = Field(default=None, index=True, foreign_key="sensor.id")
 
 
 class DBConfig(BaseModel):
