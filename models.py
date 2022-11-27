@@ -7,6 +7,9 @@ from pydantic import BaseModel
 class Sensor(SQLModel, table=True):
     id: str = Field(default=None, primary_key=True)
     created_at: datetime.datetime = Field(default_factory=datetime.datetime.now)
+    lat: Optional[float] = Field(default=None)
+    lon: Optional[float] = Field(default=None)
+    devices: List["Device"] = Relationship(back_populates="sensor")
 
 
 class Device(SQLModel, table=True):
@@ -14,6 +17,7 @@ class Device(SQLModel, table=True):
     mac_address: str = Field(default=None, index=True)
     timestamp: datetime.datetime = Field(default_factory=datetime.datetime.now, nullable=False, index=True)
     sensor_id: Optional[str] = Field(default=None, index=True, foreign_key="sensor.id")
+    sensor: Optional[Sensor] = Relationship(back_populates="devices")
 
 
 class Temperature(SQLModel, table=True):
