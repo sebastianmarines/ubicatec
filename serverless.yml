@@ -122,6 +122,14 @@ resources:
         SecretId: !Ref RDSMasterCredentials
         TargetId: !Ref RDSInstance
         TargetType: 'AWS::RDS::DBInstance'
+    ACMCertificate:
+      Type: "AWS::CertificateManager::Certificate"
+      Properties:
+        DomainName: ubicatec.co
+        DomainValidationOptions:
+          - DomainName: ubicatec.co
+            HostedZoneId: Z0233304Y4UCP5VHHSMK
+        ValidationMethod: DNS
 
 functions:
   IoTHandler:
@@ -148,7 +156,17 @@ functions:
 plugins:
   - serverless-python-requirements
   - serverless-offline
+  - serverless-domain-manager
 
 custom:
   pythonRequirements:
     usePoetry: true
+  customDomain:
+    domainName: ubicatec.co
+    certificateName: 'ubicatec.co'
+    basePath: ''
+    createRoute53Record: true
+    createRoute53IPv6Record: true
+    securityPolicy: tls_1_2
+    apiType: rest
+    autoDomain: false
