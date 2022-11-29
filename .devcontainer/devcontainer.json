@@ -3,6 +3,7 @@
   "features": {
     "ghcr.io/devcontainers/features/aws-cli:1": {},
     "ghcr.io/devcontainers-contrib/features/poetry:1": {},
-    "ghcr.io/devcontainers-contrib/features/aws-cdk:1": {}
+    "ghcr.io/devcontainers-contrib/features/aws-cdk:1": {},
+    "ghcr.io/devcontainers-contrib/features/serverless:1": {}
   }
 }
