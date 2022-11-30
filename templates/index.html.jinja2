@@ -4,9 +4,26 @@
     <link rel="icon" href="https://gist.githubusercontent.com/sebastianmarines/3cb5aeee89e87c5986ff00db01b51922/raw/2febc52c9986c6373ef9e381451ff756d13cb36f/UBICATEC.svg" sizes="any" type="image/svg+xml">
     <style>
       #map {
-        width: 800px;
-        height: 600px;
+        width: 1500px;
+        height: 850px;
       }
+
+      .img-center {
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+      }
+
+      .btn-color {
+          background-color: #f78749 !important;
+          color: white !important;
+      }
+
+      .btn-color2 {
+          background-color: #002868 !important;
+          color: white !important;
+      }
+
 );
     </style>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"
@@ -38,7 +55,7 @@
     <div class="collapse navbar-collapse" id="barraNavegadora">
       <ul class="navbar-nav ms-auto">
         <li class="nav-item">
-          <button type="button" class="btn btn-primary"
+          <button type="button" class="btn btn-color"
               data-bs-toggle="modal" data-bs-target="#indicadores">
               Indicators
           </button>
@@ -46,7 +63,7 @@
           <div class="modal fade" id="indicadores" tabindex="-1"
               role="dialog" aria-labelledby="indicadoresLabel"
               aria-hidden="true">
-              <div class="modal-dialog" role="document">
+              <div class="modal-dialog modalCenter modal-xl" role="document">
                   <div class="modal-content">
                       <!-- Modal heading -->
                       <div class="modal-header">
@@ -61,15 +78,15 @@
                           </button>
                       </div>
                       <!-- Modal body with image -->
-                      <div class="modal-body">
-                          <img src="gfg.png" />
+                      <div class="modal-body img-center">
+                          <img src="https://gist.githubusercontent.com/a01383419/06b72797202bcfff03c5ad7781d76073/raw/e435fd2745fe0f60d0406e032c2599ddbe4413e5/mapa.svg" />
                       </div>
                   </div>
               </div>
           </div>
         </li>
         <li class="nav-item">
-          <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#about">
+          <button type="button" class="btn btn-color2" data-bs-toggle="modal" data-bs-target="#about">
             About
           </button>
           <div class="modal fade" id="about" tabindex="-1" role="dialog" aria-labelledby="aboutTitle" aria-hidden="true">
@@ -88,16 +105,10 @@
                   <br>
                   Sebastian Marines, Paulina Covarrubias, Saúl Sánchez, Patricio Maya and Santiago Posada.
                 </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
-                </div>
               </div>
             </div>
           </div>
         </li>
-
-      
-
       </ul>
     </div>
   </div>
@@ -105,7 +116,7 @@
 
 <!-- Page Content -->
 
-
+<br>
 
 <div class="container d-flex align-items-center justify-content-center mt-2">
     <div id="map"></div>
