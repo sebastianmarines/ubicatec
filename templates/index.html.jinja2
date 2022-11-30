@@ -3,10 +3,11 @@
     <title>UbicaTec</title>
     <link rel="icon" href="https://gist.githubusercontent.com/sebastianmarines/3cb5aeee89e87c5986ff00db01b51922/raw/2febc52c9986c6373ef9e381451ff756d13cb36f/UBICATEC.svg" sizes="any" type="image/svg+xml">
     <style>
-        #map {
-            width: 800px;
-            height: 600px;
-        }
+      #map {
+        width: 800px;
+        height: 600px;
+      }
+);
     </style>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"
           integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI=" crossorigin=""/>
@@ -26,26 +27,52 @@
 <body>
 
 <!--  AQUI EMPIEZA EL TEMPLATE -->
-
-<!-- Navigation -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top">
+<nav class="navbar navbar-expand-lg navbar-light bg-light static-top">
   <div class="container">
     <a class="navbar-brand" href="#">
       <img src="https://gist.githubusercontent.com/sebastianmarines/73340d2b97748e145b32d84179ee89fa/raw/0c4ef87a724a3f46d693b2548e2f3a5b2da41a43/UBICATECgde2.svg" alt="..." height="36">
     </a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#barraNavegadora" aria-controls="barraNavegadora" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <div class="collapse navbar-collapse" id="barraNavegadora">
       <ul class="navbar-nav ms-auto">
         <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="#">Home</a>
+          <button type="button" class="btn btn-primary"
+              data-bs-toggle="modal" data-bs-target="#indicadores">
+              Indicators
+          </button>
+          <!--Bootstrap modal -->
+          <div class="modal fade" id="indicadores" tabindex="-1"
+              role="dialog" aria-labelledby="indicadoresLabel"
+              aria-hidden="true">
+              <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                      <!-- Modal heading -->
+                      <div class="modal-header">
+                          <h5 class="modal-title" id="indicadoresLabel">
+                              Indicators
+                          </h5>
+                          <button type="button" class="close"
+                              data-bs-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">
+                                  ×
+                              </span>
+                          </button>
+                      </div>
+                      <!-- Modal body with image -->
+                      <div class="modal-body">
+                          <img src="gfg.png" />
+                      </div>
+                  </div>
+              </div>
+          </div>
         </li>
         <li class="nav-item">
-          <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModalCenter">
+          <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#about">
             About
           </button>
-          <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+          <div class="modal fade" id="about" tabindex="-1" role="dialog" aria-labelledby="aboutTitle" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
               <div class="modal-content">
                 <div class="modal-header">
@@ -59,15 +86,10 @@
                   <br>
                   Developers:
                   <br>
-                  Sebastián Marines
-                  Paulina Covarrubias
-                  Saúl Sánchez
-                  Patricio Maya
-                  Santiago Posada
-              
+                  Sebastian Marines, Paulina Covarrubias, Saúl Sánchez, Patricio Maya and Santiago Posada.
                 </div>
                 <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                  <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
                 </div>
               </div>
             </div>
@@ -83,7 +105,6 @@
 
 <!-- Page Content -->
 
-<!-- HASTA AQUI PUSIMOS EL TEMPLATE -->
 
 
 <div class="container d-flex align-items-center justify-content-center mt-2">
