@@ -31,7 +31,7 @@ def iot_handler(event: dict, _context):
             session.refresh(sensor)
 
     with Session(engine) as session:
-        temperature = Temperature(sensor_id=sensor_id, temperature=message.temperature)
+        temperature = Temperature(sensor_id=sensor_id, temperature=message.temperature, humidity=message.humidity)
         session.add(temperature)
         session.commit()
 
@@ -51,9 +51,11 @@ def web_app_handler(_event: dict, _context):
                 (start < Device.timestamp) & (Device.timestamp < end)).filter(Device.sensor_id == sensor.id).count()
             temperature = session.query(Temperature).filter(Temperature.sensor_id == sensor.id).order_by(
                 Temperature.timestamp.desc()).first()
-            temperatures = session.query(Temperature).filter(Temperature.sensor_id == sensor.id).all()
             temp = temperature.temperature if temperature else None
-            locations.append(Location(lat=sensor.lat, lon=sensor.lon, occupancy=device_count_last_5_minutes, temperature=temp))
+            humidity = temperature.humidity if temperature else None
+            locations.append(
+                Location(lat=sensor.lat, lon=sensor.lon, occupancy=device_count_last_5_minutes, temperature=temp,
+                         humidity=humidity))
 
     env = Environment(loader=FileSystemLoader("templates"))
     template = env.get_template("index.html.jinja2")

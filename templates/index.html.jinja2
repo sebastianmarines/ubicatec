@@ -139,6 +139,7 @@
                 'lng': '{{ location.lon | string | safe }}',
                 'occupancy': {{ location.occupancy }},
                 {% if location.temperature  %}'temperature': {{ location.temperature }},{% endif %}
+                {% if location.humidity  %}'humidity': {{ location.humidity }},{% endif %}
             },
         {% endfor %}
     ]

@@ -23,6 +23,7 @@ class Device(SQLModel, table=True):
 class Temperature(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     temperature: float = Field(default=None)
+    humidity: Optional[float] = Field(default=None)
     timestamp: datetime.datetime = Field(default_factory=datetime.datetime.now, nullable=False, index=True)
     sensor_id: Optional[str] = Field(default=None, index=True, foreign_key="sensor.id")
 
@@ -39,6 +40,7 @@ class Location(BaseModel):
     lon: float
     occupancy: int
     temperature: Optional[float] = None
+    humidity: Optional[float] = None
 
 
 class DBConfig(BaseModel):
