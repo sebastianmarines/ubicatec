@@ -1,7 +1,7 @@
 import os
 from utils import get_secret
 
-from models import Device, Sensor, Location
+from models import Device, Sensor, Location, MqttMessage, Temperature
 from sqlmodel import Session, create_engine
 
 from jinja2 import Environment, FileSystemLoader
@@ -19,7 +19,9 @@ engine = create_engine(db_url, echo=ENV == "dev")
 
 
 def iot_handler(event: dict, _context):
-    sensor_id = event.get("client_id")
+    print(event)
+    message = MqttMessage(client_id=event["client_id"], **event["data"])
+    sensor_id = message.client_id
     with Session(engine) as session:
         sensor = session.query(Sensor).filter(Sensor.id == sensor_id).first()
         if not sensor:
@@ -28,14 +30,9 @@ def iot_handler(event: dict, _context):
             session.commit()
             session.refresh(sensor)
 
-    data = event.get("data")
-    if type(data) != list:
-        # TODO: Handle DHT11 sensor data coming as a string
-        ...
-
     with Session(engine) as session:
-        objects = [Device(sensor_id=sensor.id, mac_address=mac_address) for mac_address in data]
-        session.bulk_save_objects(objects)
+        temperature = Temperature(sensor_id=sensor_id, temperature=message.temperature)
+        session.add(temperature)
         session.commit()
 
     return "ok"
@@ -51,7 +48,7 @@ def web_app_handler(_event: dict, _context):
         sensors = session.query(Sensor).filter((None != Sensor.lon) & (None != Sensor.lat)).all()
         for sensor in sensors:
             device_count_last_5_minutes = session.query(Device).filter(
-                (start < Device.timestamp) & (Device.timestamp < end)).count()
+                (start < Device.timestamp) & (Device.timestamp < end)).filter(Device.sensor_id == sensor.id).count()
             locations.append(Location(lat=sensor.lat, lon=sensor.lon, occupancy=device_count_last_5_minutes))
 
     env = Environment(loader=FileSystemLoader("templates"))

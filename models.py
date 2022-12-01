@@ -27,6 +27,13 @@ class Temperature(SQLModel, table=True):
     sensor_id: Optional[str] = Field(default=None, index=True, foreign_key="sensor.id")
 
 
+class MqttMessage(BaseModel):
+    client_id: str
+    humidity: int
+    temperature: float
+    people: int
+
+
 class Location(BaseModel):
     lat: float
     lon: float
@@ -42,4 +49,3 @@ class DBConfig(BaseModel):
 
     def get_connection_string(self):
         return f"mysql+pymysql://{self.username}:{self.password}@{self.host}:{self.port}/{self.dbname}"
-
