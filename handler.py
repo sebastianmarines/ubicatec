@@ -1,4 +1,5 @@
 import os
+import time
 from utils import get_secret
 
 from models import Device, Sensor, Location, MqttMessage, Temperature
@@ -6,6 +7,10 @@ from sqlmodel import Session, create_engine
 
 from jinja2 import Environment, FileSystemLoader
 from datetime import timedelta, datetime
+
+os.putenv('TZ', 'America/Monterrey')
+time.tzset()
+
 
 ENV = os.environ.get("AWS_EXECUTION_ENV", "dev")
 DB_SECRETS_ARN = os.environ.get("DB_SECRETS_ARN")
