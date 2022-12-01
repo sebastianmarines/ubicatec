@@ -38,6 +38,7 @@ class Location(BaseModel):
     lat: float
     lon: float
     occupancy: int
+    temperature: Optional[float] = None
 
 
 class DBConfig(BaseModel):

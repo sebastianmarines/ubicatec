@@ -49,7 +49,11 @@ def web_app_handler(_event: dict, _context):
         for sensor in sensors:
             device_count_last_5_minutes = session.query(Device).filter(
                 (start < Device.timestamp) & (Device.timestamp < end)).filter(Device.sensor_id == sensor.id).count()
-            locations.append(Location(lat=sensor.lat, lon=sensor.lon, occupancy=device_count_last_5_minutes))
+            temperature = session.query(Temperature).filter(Temperature.sensor_id == sensor.id).order_by(
+                Temperature.timestamp.desc()).first()
+            temperatures = session.query(Temperature).filter(Temperature.sensor_id == sensor.id).all()
+            temp = temperature.temperature if temperature else None
+            locations.append(Location(lat=sensor.lat, lon=sensor.lon, occupancy=device_count_last_5_minutes, temperature=temp))
 
     env = Environment(loader=FileSystemLoader("templates"))
     template = env.get_template("index.html.jinja2")

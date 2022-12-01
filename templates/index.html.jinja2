@@ -138,6 +138,7 @@
                 'lat': '{{ location.lat | string | safe }}',
                 'lng': '{{ location.lon | string | safe }}',
                 'occupancy': {{ location.occupancy }},
+                {% if location.temperature  %}'temperature': {{ location.temperature }},{% endif %}
             },
         {% endfor %}
     ]

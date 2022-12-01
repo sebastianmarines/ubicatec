@@ -1,0 +1,8 @@
+{
+  "data": {
+    "humidity": 80,
+    "temperature": 24.29999924,
+    "people": 10
+  },
+  "client_id": "ESP8266"
+}
