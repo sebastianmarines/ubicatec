@@ -19,6 +19,7 @@ pyserial = "^3.5"
 [tool.poetry.group.dev.dependencies]
 ipython = "^8.6.0"
 alembic = "^1.8.1"
+typer = {extras = ["all"], version = "^0.7.0"}
 
 [build-system]
 requires = ["poetry-core"]
