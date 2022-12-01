@@ -8,6 +8,8 @@ from handler import engine
 
 import serial
 
+from mac_vendor_lookup import MacLookup
+
 
 def main(port: str, baudrate: int = 115200):
     arduino = serial.Serial(port=port, baudrate=baudrate, timeout=.1)
@@ -35,6 +37,10 @@ def main(port: str, baudrate: int = 115200):
                 continue
 
             for mac_address in data:
+                try:
+                    MacLookup().lookup(mac_address)
+                except:
+                    continue
                 objects = [Device(sensor_id=sensor.id, mac_address=mac_address)]
                 session.bulk_save_objects(objects)
                 session.commit()
