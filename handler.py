@@ -11,7 +11,6 @@ from datetime import timedelta, datetime
 os.putenv('TZ', 'America/Monterrey')
 time.tzset()
 
-
 ENV = os.environ.get("AWS_EXECUTION_ENV", "dev")
 DB_SECRETS_ARN = os.environ.get("DB_SECRETS_ARN")
 if DB_SECRETS_ARN == '[object Object]':
@@ -52,8 +51,12 @@ def web_app_handler(_event: dict, _context):
     with Session(engine) as session:
         sensors = session.query(Sensor).filter((None != Sensor.lon) & (None != Sensor.lat)).all()
         for sensor in sensors:
-            device_count_last_5_minutes = session.query(Device).filter(
-                (start < Device.timestamp) & (Device.timestamp < end)).filter(Device.sensor_id == sensor.id).count()
+            result = session.execute(
+                'select count(DISTINCT(mac_address)) from device where timestamp > :start and timestamp < :end and sensor_id = :sensor_id ;',
+                {'start': str(start), 'end': str(end), 'sensor_id': sensor.id})
+
+            device_count_last_5_minutes = result.first()[0]
+
             temperature = session.query(Temperature).filter(Temperature.sensor_id == sensor.id).order_by(
                 Temperature.timestamp.desc()).first()
             temp = temperature.temperature if temperature else None
