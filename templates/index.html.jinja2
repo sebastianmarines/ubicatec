@@ -168,8 +168,9 @@
         data: locations
     });
 
-    locations.forEach(({lat, lng, occupancy}) => {
-        L.marker([lat, lng]).addTo(propertyHeatMap)
+    locations.forEach(({lat, lng, occupancy, humidity, temperature}) => {
+        let marker = L.marker([lat, lng]).addTo(propertyHeatMap)
+        marker.bindTooltip(`Ocupacion: ${occupancy} personas <br> Humedad: ${humidity}% <br> Temperatura: ${temperature}°C`)
     })
 </script>
 </body>
